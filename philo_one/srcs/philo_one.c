@@ -69,16 +69,29 @@ void	*start_routine(void *args)
 	return (NULL);
 }
 
-int	init_game(t_game *game)
+int	init_game(int argc, char **argv, t_game **game)
 {
-	if (init_forks(game->args.num_philos, &game->forks) == KO ||
-		init_printer(&game->printer) == KO ||
-		init_philos(game, &game->philos, game->forks, game->printer == KO)
+	if (argc < 5 || > 6)
+	{
+		print_error(ARG_NUM_ERROR);
+	    return (KO);
+	}
+    else if (init_args(argc, argv, &game->args) == KO)
+    {
+		print_error(ARG_FORMAT_ERROR);
 		return (KO);
+    }
+    else (init_forks(game->args.num_philos, &game->forks) == KO ||
+        init_printer(&game->printer) == KO ||
+        init_philos(game, &game->philos, game->forks, game->printer == KO)
+	{
+	    print_error(PHILOS_INIT_ERROR);
+		return (KO);
+	}
 	return (OK);
 }
 
-int	create_threads(long num_threads, t_philo *philos, int mode)
+int	create_threads(long num_threads, t_philo *philos, (void *)(*start_routine)(void *), int mode)
 {
 	long	i;
 
@@ -88,32 +101,37 @@ int	create_threads(long num_threads, t_philo *philos, int mode)
 	while (i < num_threads)
 	{
 		if (pthread_create(philos[i].thread, NULL, start_routine, philos + i) == KO)
-		{
-			philos->status = KO;
 			return (KO);
-		}
 		i += 2;
 	}
-	return (init_threads(num_threads, philos, mode + 1));
+	return (init_threads(num_threads, philos, start_routine, mode + 1));
 }
 
-int	simulate_game()
+int	simulate_game(t_game *game)
 {
-	create_threads(game->args.num_philos, game->philos, FIRST) == KO)
+    int i;
+
+    if (create_threads(game->args.num_philos, game->philos, eat_sleep_think, FIRST) == KO)
+        game->status = KO;
+    i = 0;
+    while (i < game->args.num_philos)
+    {
+        pthread_join(game->philos[i].pthread, NULL);
+        i++;
+    }
+}
+
+void    close_game(t_game *game)
+{
+    
 }
 
 int main(int argc, char **argv)
 {
 	t_game game;
 
-	if (argc < 5 || > 6)
-		print_error(ARG_NUM_ERROR);
-	else if (parse_args(argc, argv, &game.args) == KO)
-		print_error(ARG_FORMAT_ERROR);
-	else if (init_game(&game) == KO)
-		print_error(PHILOS_INIT_ERROR);
-	else
-		simulate_game();
+    if (init_game(&game) == OK)
+		simulate_game(&game);
 	close_game(&game);
 	return (0);
 }
