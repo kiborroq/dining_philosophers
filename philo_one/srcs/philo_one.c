@@ -135,3 +135,4 @@ int main(int argc, char **argv)
 	close_game(&game);
 	return (0);
 }
+https://events.webinar.ru/SIBUR/8227267/4b626bcd2418d306313cbb6fca04f952
