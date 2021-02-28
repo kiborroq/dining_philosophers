@@ -6,7 +6,7 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 19:02:43 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/02/24 19:36:48 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/02/28 22:09:02 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,6 @@
 void			ft_bzero(void *mem, size_t n)
 {
 	memset(mem, 0, n);
-}
-
-void			*ft_calloc(size_t nmemb, size_t size)
-{
-	void *mem;
-
-	if (!nmemb || !size)
-		mem = malloc(1);
-	else
-		mem = malloc(nmemb * size);
-	if (!mem)
-		return (0);
-	ft_bzero(mem, nmemb * size);
-	return (mem);
 }
 
 int				ft_isspace(int ch)
@@ -49,7 +35,6 @@ unsigned int	ft_atoui(const char *str)
 {
 	int				i;
 	unsigned int	num;
-	int				sign;
 
 	i = 0;
 	num = 0;
