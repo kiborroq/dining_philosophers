@@ -1,36 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   close_game.c                                       :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/27 17:53:04 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:15:58 by kiborroq         ###   ########.fr       */
+/*   Created: 2021/02/27 18:09:06 by kiborroq          #+#    #+#             */
+/*   Updated: 2021/02/28 18:25:34 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo_one.h"
 
-int	close_forks(size_t num_forks, t_mutex *forks)
+size_t	get_difftime(size_t time)
 {
-	size_t	i;
+	size_t	currtime;
 
-	i = 0;
-	while (i < num_forks)
-	{
-		if (pthread_mutex_destroy(forks + i))
-			return (KO);
-		i++;
-	}
-	free(forks);
-	return (OK);
+	currtime = get_currtime();
+	return (currtime - time);
 }
 
-int	close_one_mutex(t_mutex *mutex)
+size_t	get_currtime(void)
 {
-	if (pthread_mutex_destroy(mutex))
-		return (KO);
-	free(mutex);
-	return (OK);
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	sleep_for(size_t time)
+{
+	size_t end;
+
+	end = get_currtime() + time;
+	while (get_currtime() < end)
+		usleep(1);
 }

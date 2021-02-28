@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_one.c                                        :+:      :+:    :+:   */
+/*   philo_two.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 19:10:25 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:14:09 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/01 01:34:27 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void	close_game(t_game *game)
 	int	status;
 
 	status = OK;
-	if (game->forks_m)
-		status = close_forks(game->args.num_philos, game->forks_m);
-	if (status != KO && game->printer_m)
-		status = close_one_mutex(game->printer_m);
-	if (game->philos)
-		free(game->philos);
+	if (game->forks_s && game->forks_s != SEM_FAILED)
+		status = close_one_sem(FORKS_S, game->forks_s);
+	if (status != KO && game->printer_s && game->printer_s != SEM_FAILED)
+		status = close_one_sem(PRINTER_S, game->printer_s);
+	if (status != KO && game->philos)
+		status = close_philos(game->args.num_philos, game->philos);
 	if (status == KO)
 		print_error(PHILOS_CLOSE_ERROR);
 }
@@ -49,8 +49,8 @@ int		init_game(int argc, char **argv, t_game *game)
 		print_error(ARG_FORMAT_ERROR);
 		return (KO);
 	}
-	if (init_forks(game->args.num_philos, &game->forks_m) == KO ||
-		init_one_mutex(&game->printer_m) == KO ||
+	if (init_one_sem(FORKS_S, game->args.num_philos, &game->forks_s) == KO ||
+		init_one_sem(PRINTER_S, VALBINARY_S, &game->printer_s) == KO ||
 		init_philos(game, &game->philos) == KO)
 	{
 		print_error(PHILOS_INIT_ERROR);

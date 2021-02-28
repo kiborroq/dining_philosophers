@@ -6,31 +6,31 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:53:04 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:15:58 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/01 01:21:09 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../incs/philo_one.h"
 
-int	close_forks(size_t num_forks, t_mutex *forks)
+int	close_philos(size_t num_philos, t_philo *philos)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < num_forks)
+	while (i < num_philos)
 	{
-		if (pthread_mutex_destroy(forks + i))
+		if (close_one_sem(philos[i].name, philos[i].eat_s) == KO)
 			return (KO);
 		i++;
 	}
-	free(forks);
+	free(philos);
 	return (OK);
 }
 
-int	close_one_mutex(t_mutex *mutex)
+int	close_one_sem(char *name, sem_t *sem)
 {
-	if (pthread_mutex_destroy(mutex))
+	if (sem_close(sem) ||
+		sem_unlink(name))
 		return (KO);
-	free(mutex);
 	return (OK);
 }

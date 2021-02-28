@@ -6,7 +6,7 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 19:03:42 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/02/28 22:24:53 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/01 01:32:13 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int		print_action_wrap(t_philo *philo, char *action)
 	if (*philo->status != KO)
 	{
 		diff_time = get_difftime(*philo->begin_time);
-		pthread_mutex_lock(philo->printer_m);
+		sem_wait(philo->printer_s);
 		print_action(diff_time, philo->i + 1, action);
-		pthread_mutex_unlock(philo->printer_m);
+		sem_post(philo->printer_s);
 	}
 	return (0);
 }

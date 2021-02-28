@@ -6,7 +6,7 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 18:59:17 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:13:12 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/01 01:22:23 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@
 # include "string.h"
 # include "unistd.h"
 # include "sys/time.h"
+# include "sys/stat.h"
 # include "pthread.h"
 # include "stdlib.h"
+# include "semaphore.h"
+# include "fcntl.h"
 
 # define STDERR 2
 
@@ -28,20 +31,23 @@
 # define PHILOS_SIMULATE_ERROR "Error during philosophers simulation!"
 # define PHILOS_CLOSE_ERROR "Error during philosophers closing!"
 
+# define FORKS_S "/forks_s"
+# define PRINTER_S "/printe_s"
+# define PREFIX_EAT_S_ "/eat_s_"
+
+# define VALBINARY_S 1
+
 # define OK 1
 # define KO -1
 
 # define FIRST 0
 # define SECOND 1
 
-# define TAKE_RIGHT "has taken a right fork"
-# define TAKE_LEFT "has taken a left fork"
+# define TAKE "has taken fork"
 # define EAT "is eating"
 # define SLEEP "is sleeping"
 # define THINK "is thinking"
 # define DIED "is deied"
-
-typedef pthread_mutex_t	t_mutex;
 
 typedef struct	s_args
 {
@@ -55,15 +61,15 @@ typedef struct	s_args
 typedef struct	s_philo
 {
 	long		i;
+	char		*name;
 	size_t		*num_philos_have_eaten;
 	int			*status;
 	size_t		*begin_time;
 	size_t		time_last_eat;
 	long		num_eat;
-	t_mutex		eat_m;
-	t_mutex		*leftfork_m;
-	t_mutex		*rightfork_m;
-	t_mutex		*printer_m;
+	sem_t		*eat_s;
+	sem_t		*forks_s;
+	sem_t		*printer_s;
 	t_args		*args;
 	pthread_t	thread;
 }				t_philo;
@@ -75,8 +81,8 @@ typedef struct	s_game
 	int			thereis_died;
 	size_t		begin_time;
 	t_args		args;
-	t_mutex		*forks_m;
-	t_mutex		*printer_m;
+	sem_t		*forks_s;
+	sem_t		*printer_s;
 	t_philo		*philos;
 }				t_game;
 
@@ -86,8 +92,7 @@ typedef struct	s_game
 
 int				init_args(int argc, char **argv, t_args *args);
 int				check_args(int argc, char **argv);
-int				init_one_mutex(t_mutex **mutex);
-int				init_forks(size_t num_forks, t_mutex **forks);
+int				init_one_sem(char *name, size_t value, sem_t **sem);
 int				init_philos(t_game *game, t_philo **philos);
 
 /*
@@ -113,8 +118,8 @@ void			*monitor_num_eat(void *args);
 **close_game.c - functions closing philosphers
 */
 
-int				close_forks(size_t num_forks, t_mutex *forks);
-int				close_one_mutex(t_mutex *mutex);
+int				close_philos(size_t num_philos, t_philo *philos);
+int				close_one_sem(char *name, sem_t *sem);
 
 /*
 **print.c - functions info printing in STDOUT
@@ -137,8 +142,9 @@ void			sleep_for(size_t time);
 */
 
 void			ft_bzero(void *mem, size_t n);
-unsigned int	ft_atoui(const char *str);
+unsigned int	ft_str_to_num(const char *str);
+char			*ft_uitoa(size_t num);
 int				ft_isdigit(int ch);
-int				ft_isspace(int ch);
+size_t			ft_strlen(char *str);
 
 #endif

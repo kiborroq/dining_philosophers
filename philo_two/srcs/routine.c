@@ -6,7 +6,7 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 18:03:51 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:26:44 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/01 01:30:57 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ void	*monitor_death(void *args)
 	time_to_die = philo->args->time_to_die;
 	while (*philo->status != KO)
 	{
-		if (pthread_mutex_lock(&philo->eat_m))
+		if (sem_wait(philo->eat_s))
 			*philo->status = KO;
 		diff_time = get_difftime(philo->time_last_eat);
 		if (diff_time > time_to_die)
 		{
 			print_action_wrap(philo, DIED);
 			*philo->status = KO;
-			pthread_mutex_unlock(&philo->eat_m);
+			sem_post(philo->eat_s);
 			break ;
 		}
-		if (pthread_mutex_unlock(&philo->eat_m))
+		if (sem_post(philo->eat_s))
 			*philo->status = KO;
 		usleep(1000);
 	}
@@ -66,24 +66,24 @@ void	sleeping(t_philo *philo)
 
 void	eating(t_philo *philo)
 {
-	if (pthread_mutex_lock(philo->leftfork_m) ||
-		print_action_wrap(philo, TAKE_LEFT) ||
-		pthread_mutex_lock(philo->rightfork_m) ||
-		print_action_wrap(philo, TAKE_RIGHT))
+	if (sem_wait(philo->forks_s) ||
+		print_action_wrap(philo, TAKE) ||
+		sem_wait(philo->forks_s) ||
+		print_action_wrap(philo, TAKE))
 		*philo->status = KO;
 	if (*philo->status != KO)
 	{
-		if (pthread_mutex_lock(&philo->eat_m))
+		if (sem_wait(philo->eat_s))
 			*philo->status = KO;
 		print_action_wrap(philo, EAT);
 		philo->time_last_eat = get_currtime();
 		sleep_for(philo->args->time_to_eat);
-		if (pthread_mutex_unlock(&philo->eat_m))
+		if (sem_post(philo->eat_s))
 			*philo->status = KO;
 		philo->num_eat++;
 	}
-	if (pthread_mutex_unlock(philo->leftfork_m) ||
-		pthread_mutex_unlock(philo->rightfork_m))
+	if (sem_post(philo->forks_s) ||
+		sem_post(philo->forks_s))
 		*philo->status = KO;
 }
 
