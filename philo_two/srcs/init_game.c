@@ -6,7 +6,7 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 20:29:09 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:37:30 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 21:29:21 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,20 @@ char	*get_name_eat_s_i(char *prefix, size_t i)
 	prefix_len = ft_strlen(prefix);
 	suffix_len = ft_strlen(suffix);
 	if (!(name = malloc(prefix_len + suffix_len + 1)))
+	{
+		free(suffix);
 		return (NULL);
+	}
 	while (*prefix)
 		*name++ = *prefix++;
 	while (*suffix)
 		*name++ = *suffix++;
 	*name = '\0';
+	free(suffix - suffix_len);
 	return (name - prefix_len - suffix_len);
 }
 
-int	init_philos(t_game *game, t_philo **philos)
+int		init_philos(t_game *game, t_philo **philos)
 {
 	t_philo	*tmp;
 	size_t	i;
@@ -51,8 +55,8 @@ int	init_philos(t_game *game, t_philo **philos)
 		tmp[i].status = &game->status;
 		tmp[i].begin_time = &game->begin_time;
 		tmp[i].num_philos_have_eaten = &game->num_philos_have_eaten;
-		if ((philos[i]->name = get_name_eat_s_i(PREFIX_EAT_S_, i)) == NULL ||
-			init_one_sem(philos[i]->name, VALBINARY_S, &tmp[i].eat_s) == KO)
+		if ((tmp[i].name = get_name_eat_s_i(PREFIX_EAT_S_, i)) == NULL ||
+			init_one_sem(tmp[i].name, VALBINARY_S, &tmp[i].eat_s) == KO)
 			return (KO);
 		i++;
 	}
@@ -60,14 +64,15 @@ int	init_philos(t_game *game, t_philo **philos)
 	return (OK);
 }
 
-int	init_one_sem(char *name, size_t value, sem_t **sem)
+int		init_one_sem(char *name, size_t value, sem_t **sem)
 {
+	sem_unlink(name);
 	if ((*sem = sem_open(name, O_CREAT, S_IRWXU, value)) == SEM_FAILED)
 		return (KO);
 	return (OK);
 }
 
-int	check_args(int argc, char **argv)
+int		check_args(int argc, char **argv)
 {
 	int		i;
 	char	*arg;
@@ -89,7 +94,7 @@ int	check_args(int argc, char **argv)
 	return (OK);
 }
 
-int	init_args(int argc, char **argv, t_args *args)
+int		init_args(int argc, char **argv, t_args *args)
 {
 	if (check_args(argc, argv) == KO)
 		return (KO);

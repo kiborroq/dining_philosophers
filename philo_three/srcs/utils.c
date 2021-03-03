@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 19:02:43 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/03 21:29:55 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 21:30:25 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_three.h"
 
 void			ft_bzero(void *mem, size_t n)
 {

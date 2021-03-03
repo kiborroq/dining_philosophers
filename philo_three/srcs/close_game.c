@@ -6,25 +6,26 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:53:04 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 19:40:43 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 19:49:36 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_three.h"
 
-int	close_philos(size_t num_philos, t_philo *philos)
+int	close_eats(size_t num, char **names, sem_t **eats)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < num_philos)
+	while (i < num && names[i])
 	{
-		if (close_one_sem(philos[i].name, philos[i].eat_s) == KO)
+		if (close_one_sem(names[i], eats[i]) == KO)
 			return (KO);
-		free(philos[i].name);
+		free(names[i]);
 		i++;
 	}
-	free(philos);
+	free(names);
+	free(eats);
 	return (OK);
 }
 

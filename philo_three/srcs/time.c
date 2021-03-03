@@ -1,37 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   close_game.c                                       :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/27 17:53:04 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 19:40:43 by kiborroq         ###   ########.fr       */
+/*   Created: 2021/02/27 18:09:06 by kiborroq          #+#    #+#             */
+/*   Updated: 2021/03/02 22:05:28 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_three.h"
 
-int	close_philos(size_t num_philos, t_philo *philos)
+size_t	get_difftime(size_t time)
 {
-	size_t	i;
+	size_t	currtime;
 
-	i = 0;
-	while (i < num_philos)
-	{
-		if (close_one_sem(philos[i].name, philos[i].eat_s) == KO)
-			return (KO);
-		free(philos[i].name);
-		i++;
-	}
-	free(philos);
-	return (OK);
+	currtime = get_currtime();
+	return (currtime - time);
 }
 
-int	close_one_sem(char *name, sem_t *sem)
+size_t	get_currtime(void)
 {
-	if (sem_close(sem) ||
-		sem_unlink(name))
-		return (KO);
-	return (OK);
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	sleep_for(size_t time)
+{
+	size_t end;
+
+	end = get_currtime() + time;
+	while (get_currtime() < end)
+		usleep(1);
 }

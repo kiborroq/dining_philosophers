@@ -6,7 +6,7 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 18:03:51 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:30:57 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/01 20:19:36 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	*monitor_death(void *args)
 		}
 		if (sem_post(philo->eat_s))
 			*philo->status = KO;
-		usleep(1000);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -53,7 +53,7 @@ void	*monitor_num_eat(void *args)
 				*philo->status = KO;
 			break ;
 		}
-		usleep(1000);
+		usleep(100);
 	}
 	return (NULL);
 }

@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 18:03:51 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 20:03:23 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 21:22:05 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_three.h"
 
 void	*monitor_death(void *args)
 {
@@ -22,19 +22,18 @@ void	*monitor_death(void *args)
 	time_to_die = philo->args->time_to_die;
 	while (*philo->status != KO)
 	{
-		if (pthread_mutex_lock(&philo->eat_m))
+		if (sem_wait(philo->eat_s))
 			*philo->status = KO;
 		diff_time = get_difftime(philo->time_last_eat);
 		if (diff_time > time_to_die)
 		{
 			print_action_wrap(philo, DIED);
-			*philo->status = KO;
-			pthread_mutex_unlock(&philo->eat_m);
+			sem_wait(philo->printer_s);
+			exit(KILL_ALL);
 			break ;
 		}
-		if (pthread_mutex_unlock(&philo->eat_m))
+		if (sem_post(philo->eat_s))
 			*philo->status = KO;
-		usleep(50);
 	}
 	return (NULL);
 }
@@ -45,16 +44,8 @@ void	*monitor_num_eat(void *args)
 
 	philo = (t_philo *)args;
 	while (*philo->status != KO)
-	{
 		if (philo->num_eat >= philo->args->need_num_eat)
-		{
-			*philo->num_philos_have_eaten += 1;
-			if (*philo->num_philos_have_eaten >= philo->args->num_philos)
-				*philo->status = KO;
-			break ;
-		}
-		usleep(50);
-	}
+			exit(WAIT_NEXT);
 	return (NULL);
 }
 
@@ -66,24 +57,24 @@ void	sleeping(t_philo *philo)
 
 void	eating(t_philo *philo)
 {
-	if (pthread_mutex_lock(philo->leftfork_m) ||
-		print_action_wrap(philo, TAKE_LEFT) ||
-		pthread_mutex_lock(philo->rightfork_m) ||
-		print_action_wrap(philo, TAKE_RIGHT))
+	if (sem_wait(philo->forks_s) ||
+		print_action_wrap(philo, TAKE) ||
+		sem_wait(philo->forks_s) ||
+		print_action_wrap(philo, TAKE))
 		*philo->status = KO;
 	if (*philo->status != KO)
 	{
-		if (pthread_mutex_lock(&philo->eat_m))
+		if (sem_wait(philo->eat_s))
 			*philo->status = KO;
 		print_action_wrap(philo, EAT);
 		philo->time_last_eat = get_currtime();
 		sleep_for(philo->args->time_to_eat);
-		if (pthread_mutex_unlock(&philo->eat_m))
+		if (sem_post(philo->eat_s))
 			*philo->status = KO;
 		philo->num_eat++;
 	}
-	if (pthread_mutex_unlock(philo->leftfork_m) ||
-		pthread_mutex_unlock(philo->rightfork_m))
+	if (sem_post(philo->forks_s) ||
+		sem_post(philo->forks_s))
 		*philo->status = KO;
 }
 
@@ -104,5 +95,6 @@ void	*start_routine(void *args)
 		sleeping(philo);
 		print_action_wrap(philo, THINK);
 	}
+	exit(KILL_ALL);
 	return (NULL);
 }
