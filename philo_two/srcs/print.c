@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 19:03:42 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:32:13 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 23:00:31 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_two.h"
 
 int		print_action_wrap(t_philo *philo, char *action)
 {

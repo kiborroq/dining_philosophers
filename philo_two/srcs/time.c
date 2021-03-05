@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 18:09:06 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/02/28 18:25:34 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 23:00:31 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_two.h"
 
 size_t	get_difftime(size_t time)
 {

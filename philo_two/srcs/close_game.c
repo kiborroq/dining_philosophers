@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:53:04 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 19:40:43 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 23:00:31 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_two.h"
 
 int	close_philos(size_t num_philos, t_philo *philos)
 {

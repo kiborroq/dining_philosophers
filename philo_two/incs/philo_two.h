@@ -6,12 +6,12 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/24 18:59:17 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/01 01:22:23 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 22:59:51 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_TWO_H
+# define PHILO_TWO_H
 
 # include "stdio.h"
 # include "string.h"

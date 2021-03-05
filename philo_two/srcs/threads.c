@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/27 17:55:29 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/02/28 22:52:14 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 23:00:31 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_two.h"
 
 int	init_thread_detach(pthread_t *thread, void *(*rtn) (void *), void *args)
 {

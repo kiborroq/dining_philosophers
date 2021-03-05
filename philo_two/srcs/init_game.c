@@ -6,11 +6,11 @@
 /*   By: kiborroq <kiborroq@kiborroq.42.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/25 20:29:09 by kiborroq          #+#    #+#             */
-/*   Updated: 2021/03/03 21:29:21 by kiborroq         ###   ########.fr       */
+/*   Updated: 2021/03/03 23:00:31 by kiborroq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../incs/philo_one.h"
+#include "../incs/philo_two.h"
 
 char	*get_name_eat_s_i(char *prefix, size_t i)
 {
